@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mafiascum-dev
+  namespace: ccatlett2000
+  labels:
+    service: mafiascum-dev
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/rewrite-target: "/"
+spec:
+  tls:
+    - hosts:
+        - ms-temp.mctherealm.net
+      secretName: ms-temp-tls
+  rules:
+    - host: ms-temp.mctherealm.net
+      http:
+        paths:
+          - path: /websocket/chat/
+            backend:
+              serviceName: site-chat-server
+              servicePort: 80

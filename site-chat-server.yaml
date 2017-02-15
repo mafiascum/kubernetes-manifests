@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: site-chat-server
+  namespace: ccatlett2000
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: site-chat-server
+        service: chat
+    spec:
+      containers:
+        - name: site-chat-server
+          image: mafiascum/site-chat-server:develop-5ed2f1ee8f921b07328548593afcd33d8624f6b6
+          ports:
+            - containerPort: 4241
+              protocol: TCP
+          volumeMounts:
+            - name: secret
+              mountPath: /usr/src/chat/secret/
+              readOnly: true
+      volumes:
+        - name: secret
+          secret:
+            secretName: site-chat-server
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: site-chat-server
+  namespace: ccatlett2000
+  labels:
+    app: site-chat-server
+    service: chat
+spec:
+  selector:
+    app: site-chat-server
+  ports:
+    - port: 80
+      targetPort: 4241
+      protocol: TCP
+      name: websocket
