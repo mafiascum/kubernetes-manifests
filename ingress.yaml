@@ -12,12 +12,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - ms-temp.mctherealm.net
-      secretName: ms-temp-tls
+        - forum.staging.mafiascum.net
+      secretName: forum-staging-tls
   rules:
-    - host: ms-temp.mctherealm.net
+    - host: forum.staging.mafiascum.net
       http:
         paths:
+          - path: /
+            backend:
+              serviceName: forum
+              servicePort: 80
           - path: /websocket/chat/
             backend:
               serviceName: site-chat-server
